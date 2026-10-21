@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Trigonometri Lengkap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-emerald: #34d399;
+      --accent-rose: #fb7185;
+      --input-bg: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .unit-toggle {
+      display: flex;
+      background-color: var(--input-bg);
+      padding: 0.25rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--card-border);
+      margin-bottom: 1.25rem;
+    }
+
+    .unit-toggle button {
+      flex: 1;
+      padding: 0.6rem;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .unit-toggle button.active {
+      background-color: var(--accent-blue);
+      color: #0f172a;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .input-row input {
+      flex: 1;
+      background-color: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      padding: 0.8rem 1rem;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      font-family: 'Fira Code', monospace;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-row input:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .grid-results {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .result-box {
+      background-color: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+    }
+
+    .result-value-exact {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-emerald);
+      font-family: 'Fira Code', monospace;
+      min-height: 1.8rem;
+    }
+
+    .result-value-decimal {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-family: 'Fira Code', monospace;
+    }
+
+    .quadrant-info {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background-color: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--accent-blue);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Tabel Sudut Istimewa */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    th {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    td {
+      font-family: 'Fira Code', monospace;
+    }
+
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Inverse Calculator */
+    .select-func {
+      background-color: var(--input-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-primary);
+      padding: 0.8rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Quick Buttons */
+    .quick-angles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .quick-btn {
+      background-color: var(--input-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-secondary);
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .quick-btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 600px) {
+      .grid-results {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Kalkulator Trigonometri</h1>
+      <p>Hitung Sin, Cos, Tan & Fungsi Kebalikan (Deteksi Otomatis Sudut Istimewa)</p>
+    </header>
+
+    <!-- Card Utama: Hitung Nilai Sudut -->
+    <div class="card">
+      <div class="card-title">📐 Hitung Nilai Trigonometri</div>
+      
+      <div class="unit-toggle">
+        <button id="btnDeg" class="active" onclick="setUnit('deg')">Derajat (°)</button>
+        <button id="btnRad" onclick="setUnit('rad')">Radian (rad)</button>
+      </div>
+
+      <div class="input-group">
+        <label for="angleInput">Masukkan Besar Sudut</label>
+        <div class="input-row">
+          <input type="number" id="angleInput" placeholder="Contoh: 30, 45, 60..." value="30" step="any" oninput="calculate()">
+        </div>
+        <div class="quick-angles">
+          <span style="font-size: 0.8rem; color: var(--text-secondary); align-self: center;">Sudut Cepat:</span>
+          <button class="quick-btn" onclick="setAngle(0)">0°</button>
+          <button class="quick-btn" onclick="setAngle(30)">30°</button>
+          <button class="quick-btn" onclick="setAngle(45)">45°</button>
+          <button class="quick-btn" onclick="setAngle(60)">60°</button>
+          <button class="quick-btn" onclick="setAngle(90)">90°</button>
+          <button class="quick-btn" onclick="setAngle(120)">120°</button>
+          <button class="quick-btn" onclick="setAngle(180)">180°</button>
+          <button class="quick-btn" onclick="setAngle(270)">270°</button>
+          <button class="quick-btn" onclick="setAngle(360)">360°</button>
+        </div>
+      </div>
+
+      <div class="grid-results">
+        <div class="result-box">
+          <div class="result-label">Sinus (sin)</div>
+          <div class="result-value-exact" id="sinExact">-</div>
+          <div class="result-value-decimal" id="sinDec">-</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Cosinus (cos)</div>
+          <div class="result-value-exact" id="cosExact">-</div>
+          <div class="result-value-decimal" id="cosDec">-</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Tangen (tan)</div>
+          <div class="result-value-exact" id="tanExact">-</div>
+          <div class="result-value-decimal" id="tanDec">-</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Cosecan (csc = 1/sin)</div>
+          <div class="result-value-exact" id="cscExact">-</div>
+          <div class="result-value-decimal" id="cscDec">-</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Secan (sec = 1/cos)</div>
+          <div class="result-value-exact" id="secExact">-</div>
+          <div class="result-value-decimal" id="secDec">-</div>
+        </div>
+        <div class="result-box">
+          <div class="result-label">Cotangen (cot = 1/tan)</div>
+          <div class="result-value-exact" id="cotExact">-</div>
+          <div class="result-value-decimal" id="cotDec">-</div>
+        </div>
+      </div>
+
+      <div class="quadrant-info" id="quadrantInfo">
+        <span>📍 Kuadran: <strong id="quadrantText">-</strong></span>
+        <span>🔄 Relasi Radians: <strong id="radText">-</strong></span>
+      </div>
+    </div>
+
+    <!-- Card Inverse / Kebalikan (Cari Sudut dari Nilai) -->
+    <div class="card">
+      <div class="card-title">🔍 Cari Sudut dari Nilai (Inverse Trigonometri)</div>
+      <div class="input-row" style="margin-bottom: 1rem;">
+        <select id="invFunc" class="select-func" onchange="calculateInverse()">
+          <option value="asin">arcsin (sin⁻¹)</option>
+          <option value="acos">arccos (cos⁻¹)</option>
+          <option value="atan">arctan (tan⁻¹)</option>
+        </select>
+        <input type="number" id="invValue" placeholder="Masukkan nilai, contoh: 0.5" value="0.5" step="any" oninput="calculateInverse()">
+      </div>
+      <div class="result-box">
+        <div class="result-label">Hasil Sudut</div>
+        <div class="result-value-exact" id="invResultDeg">-</div>
+        <div class="result-value-decimal" id="invResultRad">-</div>
+      </div>
+    </div>
+
+    <!-- Card Referensi Sudut Istimewa -->
+    <div class="card">
+      <div class="card-title">📋 Tabel Referensi Sudut Istimewa (Kuadran I)</div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Derajat</th>
+              <th>Radian</th>
+              <th>Sin</th>
+              <th>Cos</th>
+              <th>Tan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0°</td>
+              <td>0</td>
+              <td>0</td>
+              <td>1</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>30°</td>
+              <td>π/6</td>
+              <td>1/2</td>
+              <td>1/2 √3</td>
+              <td>1/3 √3</td>
+            </tr>
+            <tr>
+              <td>45°</td>
+              <td>π/4</td>
+              <td>1/2 √2</td>
+              <td>1/2 √2</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>60°</td>
+              <td>π/3</td>
+              <td>1/2 √3</td>
+              <td>1/2</td>
+              <td>√3</td>
+            </tr>
+            <tr>
+              <td>90°</td>
+              <td>π/2</td>
+              <td>1</td>
+              <td>0</td>
+              <td>∞ (Tak Terdefinisi)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentUnit = 'deg';
+
+    // Kamus Sudut Istimewa (Derajat -> Nilai Eksak String)
+    const specialAngles = {
+      0:   { sin: '0', cos: '1', tan: '0', csc: '∞', sec: '1', cot: '∞' },
+      30:  { sin: '1/2', cos: '1/2 √3', tan: '1/3 √3', csc: '2', sec: '2/3 √3', cot: '√3' },
+      45:  { sin: '1/2 √2', cos: '1/2 √2', tan: '1', csc: '√2', sec: '√2', cot: '1' },
+      60:  { sin: '1/2 √3', cos: '1/2', tan: '√3', csc: '2/3 √3', sec: '2', cot: '1/3 √3' },
+      90:  { sin: '1', cos: '0', tan: '∞', csc: '1', sec: '∞', cot: '0' },
+      120: { sin: '1/2 √3', cos: '-1/2', tan: '-√3', csc: '2/3 √3', sec: '-2', cot: '-1/3 √3' },
+      135: { sin: '1/2 √2', cos: '-1/2 √2', tan: '-1', csc: '√2', sec: '-√2', cot: '-1' },
+      150: { sin: '1/2', cos: '-1/2 √3', tan: '-1/3 √3', csc: '2', sec: '-2/3 √3', cot: '-√3' },
+      180: { sin: '0', cos: '-1', tan: '0', csc: '∞', sec: '-1', cot: '∞' },
+      210: { sin: '-1/2', cos: '-1/2 √3', tan: '1/3 √3', csc: '-2', sec: '-2/3 √3', cot: '√3' },
+      225: { sin: '-1/2 √2', cos: '-1/2 √2', tan: '1', csc: '-√2', sec: '-√2', cot: '1' },
+      240: { sin: '-1/2 √3', cos: '-1/2', tan: '√3', csc: '-2/3 √3', sec: '-2', cot: '1/3 √3' },
+      270: { sin: '-1', cos: '0', tan: '∞', csc: '-1', sec: '∞', cot: '0' },
+      300: { sin: '-1/2 √3', cos: '1/2', tan: '-√3', csc: '-2/3 √3', sec: '2', cot: '-1/3 √3' },
+      315: { sin: '-1/2 √2', cos: '1/2 √2', tan: '-1', csc: '-√2', sec: '√2', cot: '-1' },
+      330: { sin: '-1/2', cos: '1/2 √3', tan: '-1/3 √3', csc: '-2', sec: '2/3 √3', cot: '-√3' },
+      360: { sin: '0', cos: '1', tan: '0', csc: '∞', sec: '1', cot: '∞' }
+    };
+
+    function setUnit(unit) {
+      currentUnit = unit;
+      document.getElementById('btnDeg').className = unit === 'deg' ? 'active' : '';
+      document.getElementById('btnRad').className = unit === 'rad' ? 'active' : '';
+      calculate();
+    }
+
+    function setAngle(val) {
+      document.getElementById('angleInput').value = val;
+      setUnit('deg');
+    }
+
+    function calculate() {
+      const inputVal = parseFloat(document.getElementById('angleInput').value);
+
+      if (isNaN(inputVal)) {
+        clearResults();
+        return;
+      }
+
+      let deg = currentUnit === 'deg' ? inputVal : inputVal * (180 / Math.PI);
+      let rad = currentUnit === 'rad' ? inputVal : inputVal * (Math.PI / 180);
+
+      // Normalisasi sudut ke 0-360 derajat untuk pemetaan kuadran & sudut istimewa
+      let normalizedDeg = ((deg % 360) + 360) % 360;
+
+      // Hitung Nilai Matematis Standard
+      let sinVal = Math.sin(rad);
+      let cosVal = Math.cos(rad);
+      let tanVal = Math.tan(rad);
+
+      // Koreksi presisi floating point JS (misal cos 90)
+      if (Math.abs(cosVal) < 1e-15) cosVal = 0;
+      if (Math.abs(sinVal) < 1e-15) sinVal = 0;
+      if (Math.abs(tanVal) > 1e15) tanVal = Infinity;
+
+      let cscVal = sinVal === 0 ? Infinity : 1 / sinVal;
+      let secVal = cosVal === 0 ? Infinity : 1 / cosVal;
+      let cotVal = tanVal === 0 ? Infinity : (tanVal === Infinity ? 0 : 1 / tanVal);
+
+      // Cek apakah sudut istimewa
+      let exact = specialAngles[Math.round(normalizedDeg)];
+      let isExact = exact && Math.abs(normalizedDeg - Math.round(normalizedDeg)) < 1e-5;
+
+      // Render Hasil
+      renderResult('sin', isExact ? exact.sin : null, sinVal);
+      renderResult('cos', isExact ? exact.cos : null, cosVal);
+      renderResult('tan', isExact ? exact.tan : null, tanVal);
+      renderResult('csc', isExact ? exact.csc : null, cscVal);
+      renderResult('sec', isExact ? exact.sec : null, secVal);
+      renderResult('cot', isExact ? exact.cot : null, cotVal);
+
+      // Info Kuadran & Radian
+      updateInfo(normalizedDeg, rad);
+    }
+
+    function renderResult(id, exactStr, decVal) {
+      const exactEl = document.getElementById(id + 'Exact');
+      const decEl = document.getElementById(id + 'Dec');
+
+      if (decVal === Infinity || decVal === -Infinity || isNaN(decVal)) {
+        exactEl.innerText = '∞ (Tak Terdefinisi)';
+        decEl.innerText = 'Undefined';
+        return;
+      }
+
+      if (exactStr) {
+        exactEl.innerText = exactStr;
+        decEl.innerText = `≈ ${decVal.toFixed(6)}`;
+      } else {
+        exactEl.innerText = decVal.toFixed(6);
+        decEl.innerText = `(Bukan Sudut Istimewa Utama)`;
+      }
+    }
+
+    function updateInfo(deg, rad) {
+      let quad = '';
+      if (deg === 0 || deg === 360) quad = 'Sumbu X Positif';
+      else if (deg > 0 && deg < 90) quad = 'Kuadran I (+ All)';
+      else if (deg === 90) quad = 'Sumbu Y Positif';
+      else if (deg > 90 && deg < 180) quad = 'Kuadran II (+ Sin/Csc)';
+      else if (deg === 180) quad = 'Sumbu X Negatif';
+      else if (deg > 180 && deg < 270) quad = 'Kuadran III (+ Tan/Cot)';
+      else if (deg === 270) quad = 'Sumbu Y Negatif';
+      else if (deg > 270 && deg < 360) quad = 'Kuadran IV (+ Cos/Sec)';
+
+      document.getElementById('quadrantText').innerText = quad;
+      document.getElementById('radText').innerText = `${(rad / Math.PI).toFixed(4)} π rad (${rad.toFixed(4)} rad)`;
+    }
+
+    function clearResults() {
+      ['sin', 'cos', 'tan', 'csc', 'sec', 'cot'].forEach(id => {
+        document.getElementById(id + 'Exact').innerText = '-';
+        document.getElementById(id + 'Dec').innerText = '-';
+      });
+      document.getElementById('quadrantText').innerText = '-';
+      document.getElementById('radText').innerText = '-';
+    }
+
+    function calculateInverse() {
+      const func = document.getElementById('invFunc').value;
+      const val = parseFloat(document.getElementById('invValue').value);
+
+      if (isNaN(val)) {
+        document.getElementById('invResultDeg').innerText = '-';
+        document.getElementById('invResultRad').innerText = '-';
+        return;
+      }
+
+      let radResult;
+      if (func === 'asin') {
+        if (val < -1 || val > 1) {
+          showInvError('Domain asin harus antara -1 dan 1');
+          return;
+        }
+        radResult = Math.asin(val);
+      } else if (func === 'acos') {
+        if (val < -1 || val > 1) {
+          showInvError('Domain acos harus antara -1 dan 1');
+          return;
+        }
+        radResult = Math.acos(val);
+      } else if (func === 'atan') {
+        radResult = Math.atan(val);
+      }
+
+      let degResult = radResult * (180 / Math.PI);
+
+      document.getElementById('invResultDeg').innerText = `${degResult.toFixed(4)}°`;
+      document.getElementById('invResultRad').innerText = `≈ ${radResult.toFixed(4)} rad (${(radResult / Math.PI).toFixed(4)} π rad)`;
+    }
+
+    function showInvError(msg) {
+      document.getElementById('invResultDeg').innerText = 'Tidak Ada Solusi';
+      document.getElementById('invResultRad').innerText = msg;
+    }
+
+    // Jalankan kalkulasi awal saat pertama muat
+    calculate();
+    calculateInverse();
+  </script>
+</body>
+</html>
